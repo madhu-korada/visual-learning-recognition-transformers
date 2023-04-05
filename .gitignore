@@ -5,3 +5,4 @@ transformer_captioning/__pycache__/
 vit_classification/__pycache__/
 vit_classification/data/
 vit_classification/checkpoints/
+vit_classification/*.png

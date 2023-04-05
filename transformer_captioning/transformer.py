@@ -103,27 +103,18 @@ class PositionalEncoding(nn.Module):
     def __init__(self, embed_dim, dropout=0.1, max_len=5000):
         super().__init__()
         # TODO - use torch.nn.Embedding to create the encoding. Initialize dropout layer.
-        # self.encoding = nn.Embedding(max_len, embed_dim) 
-        self.dropout = nn.Dropout(dropout)
-        
-        pos = torch.arange(max_len).unsqueeze(1)
-        # div_term = torch.exp(torch.arange(0, embed_dim, 2) * (-math.log(10000.0) / embed_dim))
-        div = torch.pow(10000, -torch.arange(0, embed_dim, 2) / embed_dim)
-        pe = torch.zeros(1, max_len, embed_dim)
-        pe[:, :, 0::2] = torch.sin(pos * div).reshape(1, max_len, -1)
-        pe[:, :, 1::2] = torch.cos(pos * div).reshape(1, max_len, -1)
-        self.register_buffer('pe', pe)
-        
+        self.encoding = nn.Embedding(max_len, embed_dim) 
+        self.dropout = nn.Dropout(dropout)        
               
     def forward(self, x):
         N, S, D = x.shape
         # TODO - add the encoding to x
         
         # Add positional encoding to input
-        pe = self.pe[:, :S, :].repeat(N, 1, 1)
-        output = x + pe
-        output = self.dropout(output)
-   
+        seq = torch.tile(torch.arange(x.shape[1]), dims=(N,1)).cuda()
+        encoded_seq = self.encoding(seq)
+        output = x + encoded_seq
+        output = self.dropout(output)   
         return output
 
 
