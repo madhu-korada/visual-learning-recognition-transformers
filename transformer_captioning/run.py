@@ -28,14 +28,15 @@ transformer = TransformerDecoder(
           device = device
         )
 
+print("transformer called successfully")
 trainer = Trainer(transformer, train_dataloader, val_dataloader,
           num_epochs=100,
           learning_rate=1e-4,
           device = device
         )
-
+print("Trainer called successfully")
 trainer.train()
-
+print("Trainer.train() called successfully")
 # Plot the training losses.
 plt.plot(trainer.loss_history)
 plt.xlabel('Iteration')
